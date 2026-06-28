@@ -4,10 +4,14 @@ from openai import OpenAI
 import requests
 import src.prompts as prompts
 from concurrent.futures import ThreadPoolExecutor
-
+import hashlib
+import time
 
 # JinaReranker：基于Jina API的重排器，适用于多语言场景
 class JinaReranker:
+    # 全局 rerank 缓存，避免重复调用
+    _rerank_cache: dict = {}
+    
     def __init__(self):
         # 初始化Jina重排API地址和请求头
         self.url = 'https://api.jina.ai/v1/rerank'
@@ -52,11 +56,35 @@ class JinaReranker:
         if not documents:
             return []
         
-        # 提取文档文本
+        # 生成缓存 key（query + 所有文档文本的 hash）
         doc_texts = [doc.get('text', '') for doc in documents]
+        combined_hash = hashlib.md5((query + "".join(doc_texts)).encode()).hexdigest()
+        cache_key = f"jina:{combined_hash}:{top_n}"
         
+        # 检查缓存
+        if cache_key in self._rerank_cache:
+            print(f"[缓存] 使用缓存的 Jina rerank 结果，命中时间: 0.00 秒")
+            cached_result = self._rerank_cache[cache_key]
+            # 根据当前 documents 重建结果（保持原始文档的其他字段）
+            reranked = []
+            for item in cached_result:
+                index = item.get('index', 0)
+                relevance_score = item.get('relevance_score', 0.0)
+                if index < len(documents):
+                    doc = documents[index].copy()
+                    doc['score'] = relevance_score
+                    reranked.append(doc)
+            return reranked[:top_n]
+        
+        t0 = time.time()
         # 调用 Jina API 重排（只需传 top_n 个文档，Jina 内部会排序）
-        result = self.rerank(query, doc_texts, top_n=top_n)
+        result = self.rerank(query, doc_texts, top_n=len(documents))
+        t1 = time.time()
+        print(f"[计时] Jina API 调用耗时: {t1-t0:.2f} 秒")
+        
+        # 存入缓存（存储原始返回结果）
+        if 'results' in result:
+            self._rerank_cache[cache_key] = result['results']
         
         # 解析 Jina 返回结果
         reranked = []

@@ -377,8 +377,8 @@ max_config = RunConfig(
     use_serialized_tables=False,
     parent_document_retrieval=True,
     llm_reranking=True,
-    llm_reranking_sample_size=15,
-    top_n_retrieval=6,
+    llm_reranking_sample_size=12,  # 减少候选数量，从15降到12，加速Jina调用
+    top_n_retrieval=5,  # 减少最终返回数量，从6降到5，加速整体流程
     parallel_requests=4,
     submission_file=True,
     pipeline_details="Custom pdf parsing + vDB + Jina Reranking + SO CoT; llm = deepseek-v4-pro",

@@ -13,6 +13,7 @@ from src.reranking import LLMReranker, JinaReranker
 import hashlib
 import pandas as pd
 import time
+from functools import lru_cache
 
 _log = logging.getLogger(__name__)
 
@@ -81,6 +82,9 @@ class BM25Retriever:
 
 
 class VectorRetriever:
+    # 全局 embedding 缓存，避免重复调用
+    _embedding_cache: Dict[str, List[float]] = {}
+    
     def __init__(self, vector_db_dir: Path, documents_dir: Path, embedding_provider: str = "dashscope"):
         # 初始化向量检索器，加载所有向量库和文档
         self.vector_db_dir = vector_db_dir
@@ -109,13 +113,23 @@ class VectorRetriever:
             raise ValueError(f"不支持的 embedding provider: {self.embedding_provider}")
 
     def _get_embedding(self, text: str):
+        # 使用缓存避免重复调用 embedding API
+        # 生成缓存 key（使用 provider + text hash）
+        cache_key = f"{self.embedding_provider}:{hashlib.md5(text.encode()).hexdigest()}"
+        
+        if cache_key in self._embedding_cache:
+            t_cache = time.time()
+            print(f"[缓存] 使用缓存的 embedding，命中时间: 0.00 秒")
+            return self._embedding_cache[cache_key]
+        
+        t0 = time.time()
         # 根据 embedding_provider 获取文本的向量表示
         if self.embedding_provider == "openai":
             embedding = self.llm.embeddings.create(
                 input=text,
                 model="text-embedding-3-large"
             )
-            return embedding.data[0].embedding
+            result = embedding.data[0].embedding
         elif self.embedding_provider == "dashscope":
             # 用 OpenAI 兼容模式调用百炼 embedding，支持 sk-ws- 开头的 key
             load_dotenv(override=True)  # 确保环境变量被加载
@@ -129,9 +143,15 @@ class VectorRetriever:
                 input=text,
                 model="text-embedding-v1"
             )
-            return embedding.data[0].embedding
+            result = embedding.data[0].embedding
         else:
             raise ValueError(f"不支持的 embedding provider: {self.embedding_provider}")
+        
+        # 存入缓存
+        self._embedding_cache[cache_key] = result
+        t1 = time.time()
+        print(f"[计时] embedding API 调用耗时: {t1-t0:.2f} 秒（已缓存）")
+        return result
 
     @staticmethod
     def set_up_llm():

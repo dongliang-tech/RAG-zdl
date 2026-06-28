@@ -23,13 +23,14 @@
 ### 1.2 核心特性
 
 - **多格式 PDF 解析**：支持 Docling 本地解析和 PDF MinerU 云端 API 解析
-- **混合检索策略**：向量检索 + BM25 关键词检索 + LLM 重排
+- **混合检索策略**：向量检索 + BM25 关键词检索 + LLM 重排 + Jina 重排
 - **父文档检索**：支持 chunk 级检索和 page 级父文档返回
 - **多模型支持**：OpenAI、Gemini、IBM Watson、阿里云 DashScope/Qwen
 - **多问题类型**：支持字符串、数值、布尔、名单、比较类问题
 - **表格智能处理**：表格序列化，将表格转换为独立信息块
-- **可视化界面**：基于 Streamlit 的 Web 交互界面
+- **可视化界面**：基于 Streamlit 的 Web 交互界面，支持明暗主题切换
 - **并行处理**：支持多进程 PDF 解析和多线程问题处理
+- **缓存加速**：Embedding 缓存 + Jina Rerank 缓存，显著提升响应速度
 
 ### 1.3 技术栈
 
@@ -39,6 +40,7 @@
 | PDF 解析 | Docling、PDF MinerU |
 | 向量数据库 | FAISS |
 | 关键词检索 | BM25 (rank-bm25) |
+| 重排服务 | Jina AI Reranker |
 | LLM 接入 | OpenAI API、阿里云 DashScope、Gemini API |
 | 文本分块 | LangChain RecursiveCharacterTextSplitter |
 | Web 框架 | Streamlit |
@@ -707,11 +709,22 @@ streamlit run app_streamlit.py
 ```env
 OPENAI_API_KEY=sk-...          # OpenAI API 密钥
 GEMINI_API_KEY=AIza...          # Gemini API 密钥
-JINA_API_KEY=jina_...           # Jina Reranker API 密钥
-DASHSCOPE_API_KEY=sk-...        # 阿里云 DashScope API 密钥
+JINA_API_KEY=jina_...           # Jina Reranker API 密钥（用于文档重排）
+DASHSCOPE_API_KEY=sk-...        # 阿里云 DashScope API 密钥（用于 Embedding 和 LLM）
 ```
 
-### 6.2 运行配置 (RunConfig)
+### 6.2 缓存配置
+
+系统支持以下缓存机制以提升响应速度：
+
+| 缓存类型 | 缓存位置 | 说明 |
+|----------|----------|------|
+| Embedding 缓存 | `data/stock_data/databases/cache/embedding_cache.json` | 基于 query MD5 hash 缓存向量结果 |
+| Jina Rerank 缓存 | `data/stock_data/databases/cache/jina_cache.json` | 基于 query+文档组合 hash 缓存重排结果 |
+
+缓存会在相同查询时自动命中，无需额外配置。
+
+### 6.3 运行配置 (RunConfig)
 
 #### 预设配置对比
 
@@ -720,8 +733,9 @@ DASHSCOPE_API_KEY=sk-...        # 阿里云 DashScope API 密钥
 | 序列化表格 | ❌ | ❌ | ✅ |
 | 父文档检索 | ❌ | ✅ | ✅ |
 | LLM 重排 | ❌ | ❌ | ✅ |
-| 重排采样数 | - | - | 30 |
-| 检索 Top N | 10 | 10 | 10 |
+| Jina 重排 | ❌ | ❌ | ✅ |
+| 重排采样数 | - | - | 12 |
+| 检索 Top N | 10 | 10 | 5 |
 | 并行请求数 | 10 | 20 | 4 |
 | 默认模型 | gpt-4o-mini | gpt-4o | qwen-turbo |
 
