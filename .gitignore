@@ -1,0 +1,28 @@
+# Data files
+data/
+*.pdf
+*.json
+*.csv
+*.db
+*.sqlite
+*.xlsx
+*.xls
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Environment
+env/
+.venv/
+.env
+
+# OS
+.DS_Store
+
+# Logs
+*.log

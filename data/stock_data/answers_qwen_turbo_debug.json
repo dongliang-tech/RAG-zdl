@@ -1,0 +1,80 @@
+{
+  "questions": [
+    {
+      "question_text": "中芯国际在晶圆制造行业中的地位如何？主要服务哪些领域？在全球的布局情况是怎样的？",
+      "kind": "string",
+      "value": null,
+      "references": [],
+      "error": "ReadTimeout: HTTPSConnectionPool(host='dashscope.aliyuncs.com', port=443): Read timed out. (read timeout=300)",
+      "answer_details": {
+        "$ref": "#/answer_details/0"
+      }
+    },
+    {
+      "question_text": "中芯国际2024年的营收情况如何？同比增长多少？",
+      "kind": "string",
+      "value": "N/A",
+      "references": [
+        {
+          "pdf_sha1": "smic2024sha1",
+          "page_index": 0
+        }
+      ],
+      "answer_details": {
+        "$ref": "#/answer_details/1"
+      }
+    },
+    {
+      "question_text": "中芯国际的主要竞争对手有哪些？",
+      "kind": "string",
+      "value": "N/A",
+      "references": [
+        {
+          "pdf_sha1": "smic2024sha1",
+          "page_index": 0
+        }
+      ],
+      "answer_details": {
+        "$ref": "#/answer_details/2"
+      }
+    }
+  ],
+  "answer_details": [
+    {
+      "error_traceback": "Traceback (most recent call last):\n  File \"/usr/local/lib/python3.11/site-packages/urllib3/connectionpool.py\", line 534, in _make_request\n    response = conn.getresponse()\n               ^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/urllib3/connection.py\", line 565, in getresponse\n    httplib_response = super().getresponse()\n                       ^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/Cellar/python@3.11/3.11.12_1/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py\", line 1395, in getresponse\n    response.begin()\n  File \"/usr/local/Cellar/python@3.11/3.11.12_1/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py\", line 325, in begin\n    version, status, reason = self._read_status()\n                              ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/Cellar/python@3.11/3.11.12_1/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py\", line 286, in _read_status\n    line = str(self.fp.readline(_MAXLINE + 1), \"iso-8859-1\")\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/Cellar/python@3.11/3.11.12_1/Frameworks/Python.framework/Versions/3.11/lib/python3.11/socket.py\", line 718, in readinto\n    return self._sock.recv_into(b)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/Cellar/python@3.11/3.11.12_1/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py\", line 1314, in recv_into\n    return self.read(nbytes, buffer)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/Cellar/python@3.11/3.11.12_1/Frameworks/Python.framework/Versions/3.11/lib/python3.11/ssl.py\", line 1166, in read\n    return self._sslobj.read(len, buffer)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTimeoutError: The read operation timed out\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/usr/local/lib/python3.11/site-packages/requests/adapters.py\", line 667, in send\n    resp = conn.urlopen(\n           ^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/urllib3/connectionpool.py\", line 841, in urlopen\n    retries = retries.increment(\n              ^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/urllib3/util/retry.py\", line 474, in increment\n    raise reraise(type(error), error, _stacktrace)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/urllib3/util/util.py\", line 39, in reraise\n    raise value\n  File \"/usr/local/lib/python3.11/site-packages/urllib3/connectionpool.py\", line 787, in urlopen\n    response = self._make_request(\n               ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/urllib3/connectionpool.py\", line 536, in _make_request\n    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)\n  File \"/usr/local/lib/python3.11/site-packages/urllib3/connectionpool.py\", line 367, in _raise_timeout\n    raise ReadTimeoutError(\nurllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='dashscope.aliyuncs.com', port=443): Read timed out. (read timeout=300)\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/Users/wan/Desktop/测试用/AI大模型应用第17期/23-项目实战：企业知识库/RAG-cy/src/questions_processing.py\", line 301, in _process_single_question\n    answer_dict = self.process_question(question_text, schema)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/wan/Desktop/测试用/AI大模型应用第17期/23-项目实战：企业知识库/RAG-cy/src/questions_processing.py\", line 215, in process_question\n    answer_dict = self.get_answer_for_company(company_name=company_name, question=question, schema=schema)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/wan/Desktop/测试用/AI大模型应用第17期/23-项目实战：企业知识库/RAG-cy/src/questions_processing.py\", line 148, in get_answer_for_company\n    retrieval_results = retriever.retrieve_by_company_name(\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/wan/Desktop/测试用/AI大模型应用第17期/23-项目实战：企业知识库/RAG-cy/src/retrieval.py\", line 329, in retrieve_by_company_name\n    reranked_results = self.reranker.rerank_documents(\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/wan/Desktop/测试用/AI大模型应用第17期/23-项目实战：企业知识库/RAG-cy/src/reranking.py\", line 215, in rerank_documents\n    batch_results = list(executor.map(process_batch, doc_batches))\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/Cellar/python@3.11/3.11.12_1/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py\", line 619, in result_iterator\n    yield _result_or_cancel(fs.pop())\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/Cellar/python@3.11/3.11.12_1/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py\", line 317, in _result_or_cancel\n    return fut.result(timeout)\n           ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/Cellar/python@3.11/3.11.12_1/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py\", line 456, in result\n    return self.__get_result()\n           ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/Cellar/python@3.11/3.11.12_1/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/_base.py\", line 401, in __get_result\n    raise self._exception\n  File \"/usr/local/Cellar/python@3.11/3.11.12_1/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/thread.py\", line 58, in run\n    result = self.fn(*self.args, **self.kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/wan/Desktop/测试用/AI大模型应用第17期/23-项目实战：企业知识库/RAG-cy/src/reranking.py\", line 185, in process_batch\n    rankings = self.get_rank_for_multiple_blocks(query, texts)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/wan/Desktop/测试用/AI大模型应用第17期/23-项目实战：企业知识库/RAG-cy/src/reranking.py\", line 127, in get_rank_for_multiple_blocks\n    rsp = self.llm.Generation.call(\n          ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/dashscope/aigc/generation.py\", line 158, in call\n    response = super().call(model=model,\n               ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/dashscope/client/base_api.py\", line 440, in call\n    return request.call()\n           ^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/dashscope/api_entities/http_request.py\", line 106, in call\n    output = next(response)\n             ^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/dashscope/api_entities/http_request.py\", line 379, in _handle_request\n    raise e\n  File \"/usr/local/lib/python3.11/site-packages/dashscope/api_entities/http_request.py\", line 362, in _handle_request\n    response = session.post(url=self.url,\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/requests/sessions.py\", line 637, in post\n    return self.request(\"POST\", url, data=data, json=json, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/requests/sessions.py\", line 589, in request\n    resp = self.send(prep, **send_kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/requests/sessions.py\", line 703, in send\n    r = adapter.send(request, **kwargs)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.11/site-packages/requests/adapters.py\", line 713, in send\n    raise ReadTimeout(e, request=request)\nrequests.exceptions.ReadTimeout: HTTPSConnectionPool(host='dashscope.aliyuncs.com', port=443): Read timed out. (read timeout=300)\n",
+      "self": "#/answer_details/0"
+    },
+    {
+      "step_by_step_analysis": "",
+      "reasoning_summary": "",
+      "relevant_pages": [
+        0
+      ],
+      "response_data": {
+        "model": "qwen-turbo-latest",
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "self": "#/answer_details/1"
+    },
+    {
+      "step_by_step_analysis": "",
+      "reasoning_summary": "",
+      "relevant_pages": [
+        0
+      ],
+      "response_data": {
+        "model": "qwen-turbo-latest",
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "self": "#/answer_details/2"
+    }
+  ],
+  "statistics": {
+    "total_questions": 3,
+    "error_count": 1,
+    "na_count": 2,
+    "success_count": 0
+  }
+}

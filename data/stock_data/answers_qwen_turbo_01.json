@@ -1,0 +1,23 @@
+{
+  "answers": [
+    {
+      "question_text": "中芯国际在晶圆制造行业中的地位如何？主要服务哪些领域？在全球的布局情况是怎样的？",
+      "kind": "string",
+      "value": "N/A",
+      "references": []
+    },
+    {
+      "question_text": "中芯国际2024年的营收情况如何？同比增长多少？",
+      "kind": "string",
+      "value": "N/A",
+      "references": []
+    },
+    {
+      "question_text": "中芯国际的主要竞争对手有哪些？",
+      "kind": "string",
+      "value": "N/A",
+      "references": []
+    }
+  ],
+  "details": "Custom pdf parsing + vDB + Router + Parent Document Retrieval + reranking + SO CoT; llm = qwen-turbo"
+}

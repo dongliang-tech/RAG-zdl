@@ -1,0 +1,93 @@
+{
+  "questions": [
+    {
+      "question_text": "中芯国际在晶圆制造行业中的地位如何？主要服务哪些领域？在全球的布局情况是怎样的？",
+      "kind": "string",
+      "value": "N/A",
+      "references": [
+        {
+          "pdf_sha1": "smic2024sha1",
+          "page_index": 0
+        }
+      ],
+      "answer_details": {
+        "$ref": "#/answer_details/0"
+      }
+    },
+    {
+      "question_text": "中芯国际2024年的营收情况如何？同比增长多少？",
+      "kind": "string",
+      "value": "N/A",
+      "references": [
+        {
+          "pdf_sha1": "smic2024sha1",
+          "page_index": 0
+        }
+      ],
+      "answer_details": {
+        "$ref": "#/answer_details/1"
+      }
+    },
+    {
+      "question_text": "中芯国际的主要竞争对手有哪些？",
+      "kind": "string",
+      "value": "N/A",
+      "references": [
+        {
+          "pdf_sha1": "smic2024sha1",
+          "page_index": 0
+        }
+      ],
+      "answer_details": {
+        "$ref": "#/answer_details/2"
+      }
+    }
+  ],
+  "answer_details": [
+    {
+      "step_by_step_analysis": "",
+      "reasoning_summary": "",
+      "relevant_pages": [
+        0
+      ],
+      "response_data": {
+        "model": "qwen-turbo-latest",
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "self": "#/answer_details/0"
+    },
+    {
+      "step_by_step_analysis": "",
+      "reasoning_summary": "",
+      "relevant_pages": [
+        0
+      ],
+      "response_data": {
+        "model": "qwen-turbo-latest",
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "self": "#/answer_details/1"
+    },
+    {
+      "step_by_step_analysis": "",
+      "reasoning_summary": "",
+      "relevant_pages": [
+        0
+      ],
+      "response_data": {
+        "model": "qwen-turbo-latest",
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "self": "#/answer_details/2"
+    }
+  ],
+  "statistics": {
+    "total_questions": 3,
+    "error_count": 0,
+    "na_count": 3,
+    "success_count": 0
+  }
+}
