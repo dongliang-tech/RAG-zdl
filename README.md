@@ -24,13 +24,15 @@
 
 - **多格式 PDF 解析**：支持 Docling 本地解析和 PDF MinerU 云端 API 解析
 - **混合检索策略**：向量检索 + BM25 关键词检索 + LLM 重排 + Jina 重排
+- **查询路由**：根据问题类型自动选择最优检索策略
+- **多向量路由**：支持多 Embedding 模型并行检索，选择最佳结果
 - **父文档检索**：支持 chunk 级检索和 page 级父文档返回
 - **多模型支持**：OpenAI、Gemini、IBM Watson、阿里云 DashScope/Qwen
 - **多问题类型**：支持字符串、数值、布尔、名单、比较类问题
 - **表格智能处理**：表格序列化，将表格转换为独立信息块
 - **可视化界面**：基于 Streamlit 的 Web 交互界面，支持明暗主题切换
 - **并行处理**：支持多进程 PDF 解析和多线程问题处理
-- **缓存加速**：Embedding 缓存 + Jina Rerank 缓存，显著提升响应速度
+- **缓存加速**：Embedding 缓存（基于查询 MD5 hash）+ Jina Rerank 缓存（基于查询+文档组合 hash），相同查询秒级响应
 
 ### 1.3 技术栈
 
@@ -715,12 +717,16 @@ DASHSCOPE_API_KEY=sk-...        # 阿里云 DashScope API 密钥（用于 Embedd
 
 ### 6.2 缓存配置
 
-系统支持以下缓存机制以提升响应速度：
+系统支持以下缓存机制以提升响应速度，避免重复调用外部 API：
 
-| 缓存类型 | 缓存位置 | 说明 |
-|----------|----------|------|
-| Embedding 缓存 | `data/stock_data/databases/cache/embedding_cache.json` | 基于 query MD5 hash 缓存向量结果 |
-| Jina Rerank 缓存 | `data/stock_data/databases/cache/jina_cache.json` | 基于 query+文档组合 hash 缓存重排结果 |
+| 缓存类型 | 缓存位置 | 缓存策略 | 用途说明 |
+|----------|----------|----------|----------|
+| Embedding 缓存 | `data/stock_data/databases/cache/embedding_cache.json` | 基于查询 MD5 hash | 将用户查询转换为向量时，相同查询直接返回缓存结果，无需重复调用 Embedding API，节省 API 费用并提升响应速度 |
+| Jina Rerank 缓存 | `data/stock_data/databases/cache/jina_cache.json` | 基于查询+文档组合 hash | 对检索到的文档进行重排序时，相同查询+文档组合直接返回缓存的重排结果，避免重复调用 Jina Rerank API |
+
+**缓存效果**：
+- 首次查询：正常调用外部 API，响应时间约 3-5 秒
+- 重复查询：直接命中缓存，响应时间降至毫秒级
 
 缓存会在相同查询时自动命中，无需额外配置。
 

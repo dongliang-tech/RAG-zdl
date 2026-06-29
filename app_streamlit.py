@@ -29,13 +29,11 @@ else:
 st.markdown("""
 <div style='background: linear-gradient(90deg, #7b2ff2 0%, #f357a8 100%); padding: 20px 0; border-radius: 12px; text-align: center;'>
     <h2 style='color: white; margin: 0;'>🚀 企业知识库 RAG 系统</h2>
-    <div style='color: #fff; font-size: 16px;'>多公司年报问答 | FAISS向量检索 + BM25关键词检索 + Jina重排 | 表格序列化 + 父文档检索 | DashScope/Qwen/OpenAI多模型支持 | 缓存加速 | 流式输出</div>
+    <div style='color: #fff; font-size: 16px;'>多公司年报问答 | FAISS向量检索 + BM25关键词检索 + Jina重排 | 查询路由 + 多向量路由 | 表格序列化 + 父文档检索 | DashScope/Qwen/OpenAI多模型支持 | Embedding缓存+Jina重排缓存加速 | 流式输出</div>
 </div>
 """, unsafe_allow_html=True)
 
 with st.sidebar:
-    st.header("查询设置")
-    company_name = st.text_input("公司名称", "中芯国际", help="请输入要查询的公司名称，需与年报中的公司名一致")
     user_question = st.text_area("输入问题", "请简要总结公司2022年主营业务的主要内容。", height=80)
     submit_btn = st.button("生成答案", use_container_width=True)
 
@@ -46,7 +44,6 @@ if submit_btn and user_question.strip():
     answer_placeholder = st.empty()
     step_by_step_placeholder = st.empty()
     reasoning_summary_placeholder = st.empty()
-    relevant_pages_placeholder = st.empty()
     
     status_placeholder.info("🔄 正在检索相关信息，请稍候...")
     
@@ -54,11 +51,10 @@ if submit_btn and user_question.strip():
         answer_dict = {
             "step_by_step_analysis": "",
             "reasoning_summary": "",
-            "relevant_pages": [],
             "final_answer": ""
         }
         
-        for event in pipeline.answer_single_question_streaming(user_question, kind="string", company_name=company_name.strip()):
+        for event in pipeline.answer_single_question_streaming(user_question, kind="string"):
             event_type = event.get("event")
             
             if event_type == "retrieval_done":
@@ -78,22 +74,6 @@ if submit_btn and user_question.strip():
             elif event_type == "reasoning_summary":
                 answer_dict["reasoning_summary"] = event.get("content", "")
                 reasoning_summary_placeholder.success(f"**推理摘要：**\n\n{event.get('content', '')}")
-            elif event_type == "relevant_pages":
-                pages = event.get("content", [])
-                answer_dict["relevant_pages"] = pages
-                if isinstance(pages, list) and len(pages) > 0:
-                    page_numbers = []
-                    for p in pages:
-                        if isinstance(p, (list, tuple)):
-                            page_numbers.append(str(p[0]))
-                        elif isinstance(p, dict):
-                            page_numbers.append(str(p.get('page', '')))
-                        else:
-                            page_numbers.append(str(p))
-                    pages_text = ", ".join(page_numbers)
-                    relevant_pages_placeholder.markdown(f"**📄 相关页面：** {pages_text}")
-                else:
-                    relevant_pages_placeholder.markdown("**📄 相关页面：** 未找到相关页面")
             elif event_type == "final_answer":
                 answer_dict["final_answer"] = event.get("content", "")
                 status_placeholder.success("✅ 答案生成完成")
