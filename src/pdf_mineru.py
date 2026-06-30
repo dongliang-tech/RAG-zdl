@@ -1,12 +1,18 @@
 import requests # 导入requests库，用于发送HTTP请求
 import time # 导入time库，用于控制程序等待时间
 import zipfile # 导入zipfile库，用于解压zip文件
+import os # 导入os库，用于获取环境变量
 
 # MinerU平台的API密钥，用于身份验证（JWT Token格式）
-api_key = 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFM1MTIifQ.eyJqdGkiOiI3NjQwMDUxNCIsInJvbCI6IlJPTEVfUkVHSVNURVIiLCJpc3MiOiJPcGVuWExhYiIsImlhdCI6MTc4MjUyNzQ1MCwiY2xpZW50SWQiOiJsa3pkeDU3bnZ5MjJqa3BxOXgydyIsInBob25lIjoiMTc3MTcxOTIwNDciLCJvcGVuSWQiOm51bGwsInV1aWQiOiJiYjIzYWFkNS01NWM2LTQ5OTItYWFmMi1kZjE0ZmNkMmUyMDIiLCJlbWFpbCI6IiIsImV4cCI6MTc5MDMwMzQ1MH0.MAbu6a9OBP9vtY83kcDgCsKtnTY_OWs8GgIC151QudTFr3Bjm9yFP3NGvmpMaj5Uip6BE3TjU-5jdTZ-DsvlLg'
+# 请通过环境变量 MINERU_API_KEY 设置，不要在此硬编码
+api_key = os.getenv('MINERU_API_KEY', '')
 
 # 提交PDF解析任务，获取任务ID
 def get_task_id(file_name):
+    # 检查 API Key 是否已配置
+    if not api_key:
+        raise ValueError("MinerU API Key 未配置。请设置环境变量 MINERU_API_KEY，参考 .env.example 文件")
+    
     # MinerU平台的任务提交接口地址
     url='https://mineru.net/api/v4/extract/task'
     # 设置HTTP请求头，包含内容类型和身份验证信息

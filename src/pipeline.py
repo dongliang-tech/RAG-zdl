@@ -138,9 +138,8 @@ class Pipeline:
         :param file_name: PDF 文件名（如 '【财报】中芯国际：中芯国际2024年年度报告.pdf'）
         """
         # 调用 pdf_mineru 获取 task_id 并下载、解压
-        print(f"开始处理: {file_name}")
-        # task_id = pdf_mineru.get_task_id(file_name)
-        task_id = '9868b9a7-5c41-4479-8db7-df7ea70500f0'
+        # 注意：需要先设置 MINERU_API_KEY 环境变量
+        task_id = pdf_mineru.get_task_id(file_name)
         print(f"task_id: {task_id}")
         pdf_mineru.get_result(task_id)
 

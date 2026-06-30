@@ -1,5 +1,11 @@
 import streamlit as st
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+# 加载环境变量
+load_dotenv()
+
 from src.pipeline import Pipeline, max_config
 from src.questions_processing import QuestionsProcessor
 import json
@@ -8,7 +14,7 @@ import traceback
 root_path = Path("data/stock_data")
 pipeline = Pipeline(root_path, run_config=max_config)
 
-st.set_page_config(page_title="RAG Challenge 2", layout="wide")
+st.set_page_config(page_title="EnterpriseRAG", layout="wide")
 
 theme = st.get_option('theme.base')
 if theme == 'dark':
